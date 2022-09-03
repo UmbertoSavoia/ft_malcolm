@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -13,13 +14,20 @@
 #include <sys/socket.h>
 #include <linux/if_packet.h>
 #include <net/ethernet.h>
-#include <signal.h>
+#include <sys/types.h>
+#include <ifaddrs.h>
 
 #define EXIT_MSG "Exiting program..."
 #define print_mac(m) printf("%02x:%02x:%02x:%02x:%02x:%02x\n", \
     m[0], m[1], m[2], m[3], m[4], m[5])
+#define print_ip(m) printf("%d.%d.%d.%d\n", m[0], m[1], m[2], m[3])
 
 int     check(int ac, char **av);
+int     usage(char *program);
+void    print_info(struct ethhdr *eth_frame, struct ether_arp *arp, char *header);
+int     interface_from_index(int ifindex, struct ifaddrs *iface);
+void    *ft_memcpy(void *dest, const void *src, size_t n);
+void    string_to_addr(char *s, unsigned char *arr, int base, int len, char tok);
 
 #endif
 
