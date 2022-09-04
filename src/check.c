@@ -40,11 +40,14 @@ int     check_mac(char *mac)
 int     check(int ac, char **av, char *verbose)
 {
     int max = MAX_ARG;
+
     if ((ac == 6 && av[5][0] == '-' && av[5][1] == 'v')) {
         ++max;
         *verbose = 1;
     }
-    if (ac != max) {
+    if (getuid() != 0) {
+        return -1;
+    } else if (ac != max) {
         printf("%s: Wrong arguments -v\n", av[0]);
         return -1;
     } else if (check_ip(av[1]) < 0) {
@@ -60,4 +63,5 @@ int     check(int ac, char **av, char *verbose)
         printf("%s: unknown host or invalid MAC address: (%s)\n", av[0], av[4]);
         return -1;
     }
+    return 0;
 }
