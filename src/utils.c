@@ -16,8 +16,9 @@ void    *ft_memcpy(void *dest, const void *src, size_t n)
 
 int     usage(char *program)
 {
-    printf("\n %s\n Usage:\n  sudo %s <source ip> <source mac address> <target ip> <target mac address>\n",
+    printf("\n%s\nUsage:\n sudo %s <source ip> <source mac address> <target ip> <target mac address> [-v]\n",
            "This tool must be run as root", program);
+    printf("   -v:  verbose mode\n");
     return 1;
 }
 

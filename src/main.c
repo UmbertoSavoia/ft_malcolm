@@ -42,12 +42,15 @@ int     receiver_packet(char **av, struct ethhdr *eth_frame, struct ether_arp *a
            (*(in_addr_t *)arp->arp_spa != inet_addr(av[3])) ) {
         recvfrom(fdsock, packet, IP_MAXPACKET, 0, (struct sockaddr*)src_addr, &src_addr_len);
     }
+    printf("Package received\n");
     return 0;
 }
 
-void    sender_packet(uint8_t *packet, struct sockaddr_ll *src_addr)
+void    sender_packet(uint8_t *packet, struct sockaddr_ll *src_addr, char verbose)
 {
     while (42) {
+        if (verbose)
+            printf("Sending ARP Packet...\n");
         sendto(fdsock, packet, sizeof(struct ethhdr)+sizeof(struct ether_arp),
             0, (struct sockaddr *)src_addr, sizeof(struct sockaddr_ll));
         sleep(2);
@@ -60,19 +63,21 @@ int     main(int ac, char **av)
     struct ethhdr *eth_frame = (struct ethhdr *)packet;
     struct ether_arp *arp = (struct ether_arp *)(packet + sizeof(struct ethhdr));
     struct sockaddr_ll src_addr = {0};
+    char verbose = 0;
 
     signal(SIGINT, &handle_sig_int);
-    if (check(ac, av) < 0)
+    if (check(ac, av, &verbose) < 0)
         return usage(av[0]);
 
     if (receiver_packet(av, eth_frame, arp, &src_addr, packet) < 0)
         return 1;
-
-    print_info(eth_frame, arp, "REPLY");
+    if (verbose)
+        print_info(eth_frame, arp, "REPLY");
     prepare_packet(src_addr.sll_ifindex, eth_frame, arp, av);
-    print_info(eth_frame, arp, "RESPONSE");
+    if (verbose)
+        print_info(eth_frame, arp, "RESPONSE");
 
-    sender_packet(packet, &src_addr);
+    sender_packet(packet, &src_addr, verbose);
 
     printf("\n%s\n", EXIT_MSG);
     close(fdsock);

@@ -37,10 +37,15 @@ int     check_mac(char *mac)
     return check_addr(mac, 16, 6, ':');
 }
 
-int     check(int ac, char **av)
+int     check(int ac, char **av, char *verbose)
 {
-    if (ac != 5) {
-        printf("%s: Wrong arguments\n", av[0]);
+    int max = MAX_ARG;
+    if ((ac == 6 && av[5][0] == '-' && av[5][1] == 'v')) {
+        ++max;
+        *verbose = 1;
+    }
+    if (ac != max) {
+        printf("%s: Wrong arguments -v\n", av[0]);
         return -1;
     } else if (check_ip(av[1]) < 0) {
         printf("%s: unknown host or invalid IP address: (%s)\n", av[0], av[1]);

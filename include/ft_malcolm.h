@@ -18,12 +18,13 @@
 #include <ifaddrs.h>
 #include <netdb.h>
 
+#define MAX_ARG 5
 #define EXIT_MSG "Exiting program..."
 #define print_mac(m) printf("%02x:%02x:%02x:%02x:%02x:%02x\n", \
     m[0], m[1], m[2], m[3], m[4], m[5])
 #define print_ip(m) printf("%d.%d.%d.%d\n", m[0], m[1], m[2], m[3])
 
-int     check(int ac, char **av);
+int     check(int ac, char **av, char *verbose);
 int     usage(char *program);
 void    print_info(struct ethhdr *eth_frame, struct ether_arp *arp, char *header);
 int     interface_from_index(int ifindex, struct ifaddrs *iface);
