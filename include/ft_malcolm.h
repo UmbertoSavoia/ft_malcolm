@@ -16,6 +16,7 @@
 #include <net/ethernet.h>
 #include <sys/types.h>
 #include <ifaddrs.h>
+#include <netdb.h>
 
 #define EXIT_MSG "Exiting program..."
 #define print_mac(m) printf("%02x:%02x:%02x:%02x:%02x:%02x\n", \
